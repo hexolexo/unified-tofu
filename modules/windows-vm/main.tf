@@ -21,7 +21,7 @@ resource "null_resource" "autounattend_floppy" {
   count = var.vm_count
 
   provisioner "local-exec" {
-    # HACK: Using dd + mkfs.fat because libvirt provider doesn't support floppies directly
+    #  HACK: Using dd + mkfs.fat because libvirt provider doesn't support floppies directly
     command = <<-EOT
       sudo dd if=/dev/zero of=/tmp/autounattend-${var.vm_name_prefix}-${count.index}.img bs=1024 count=1440 2>/dev/null
       sudo mkfs.fat /tmp/autounattend-${var.vm_name_prefix}-${count.index}.img >/dev/null 2>&1
@@ -94,7 +94,7 @@ resource "libvirt_domain" "vm" {
 
   machine = "q35"
 
-  # WARN: This XSLT is fragile - test after libvirt provider updates
+  #  WARN: This XSLT sucks
   xml {
     xslt = <<-EOF
       <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
