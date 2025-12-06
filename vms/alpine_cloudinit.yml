@@ -1,0 +1,21 @@
+#cloud-config
+hostname: ${hostname}
+
+users:
+  - name: hexolexo
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: wheel
+    shell: /bin/ash
+    ssh_authorized_keys:
+      - ${ssh_key}
+
+package_update: true
+packages:
+  - openssh
+  - sudo
+
+runcmd:
+  - rc-update add sshd default
+  - rc-service sshd start
+
+timezone: Australia/Sydney

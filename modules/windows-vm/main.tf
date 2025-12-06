@@ -67,19 +67,8 @@ resource "libvirt_volume" "disk" {
   count  = var.vm_count
   name   = "${var.vm_name_prefix}-${count.index}-disk.qcow2"
   pool   = libvirt_pool.vm_pool.name
-  size   = var.disk_size
+  size   = var.disk_size * 1024 * 1024 * 1024
   format = "qcow2"
-}
-
-resource "libvirt_network" "vm_network" {
-  name      = "${var.vm_name_prefix}_network"
-  mode      = var.network_mode
-  addresses = var.network_addresses
-  autostart = true
-
-  dhcp {
-    enabled = true
-  }
 }
 
 resource "libvirt_domain" "vm" {
@@ -141,7 +130,7 @@ resource "libvirt_domain" "vm" {
   }
 
   network_interface {
-    network_id     = libvirt_network.vm_network.id
+    network_name   = "default"
     wait_for_lease = false
   }
 

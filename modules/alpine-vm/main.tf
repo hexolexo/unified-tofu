@@ -1,0 +1,71 @@
+terraform {
+  required_providers {
+    libvirt = {
+      source  = "dmacvicar/libvirt"
+      version = "~> 0.8.0"
+    }
+  }
+}
+
+resource "libvirt_pool" "alpine" {
+  name = "${var.vm_name_prefix}_pool"
+  type = "dir"
+  path = var.pool_path
+}
+
+resource "libvirt_volume" "alpine_base" {
+  name   = "${var.vm_name_prefix}_base.qcow2"
+  pool   = libvirt_pool.alpine.name
+  source = var.alpine_ISO_path
+  format = "qcow2"
+}
+
+resource "libvirt_volume" "alpine_disk" {
+  count          = var.vm_count
+  name           = "${var.vm_name_prefix}_${count.index}.qcow2"
+  pool           = libvirt_pool.alpine.name
+  base_volume_id = libvirt_volume.alpine_base.id
+  size           = var.disk_size * 1086373952 // GB to bytes
+  format         = "qcow2"
+}
+
+resource "libvirt_cloudinit_disk" "alpine_init" {
+  count = var.vm_count
+  name  = "${var.vm_name_prefix}_cloudinit_${count.index}.iso"
+  pool  = libvirt_pool.alpine.name
+  user_data = templatefile("${var.cloudinit_path}", {
+    hostname = "${var.vm_name_prefix}-${count.index}"
+    ssh_key  = file("~/.ssh/id_rsa.pub")
+  })
+}
+
+resource "libvirt_domain" "alpine_vm" {
+  count     = var.vm_count
+  name      = "${var.vm_name_prefix}_${count.index}"
+  memory    = var.memory
+  vcpu      = var.vcpu
+  autostart = var.autostart
+
+  disk {
+    volume_id = libvirt_volume.alpine_disk[count.index].id
+  }
+
+  cloudinit = libvirt_cloudinit_disk.alpine_init[count.index].id
+
+  network_interface {
+    network_name   = "default"
+    wait_for_lease = false
+  }
+
+  console {
+    type        = "pty"
+    target_port = "0"
+    target_type = "serial"
+  }
+
+  graphics {
+    type        = "vnc"
+    listen_type = "address"
+    autoport    = true
+  }
+}

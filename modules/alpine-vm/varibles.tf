@@ -19,24 +19,20 @@ variable "vcpu" {
 
 variable "disk_size" {
   type        = number
-  default     = 40
+  default     = 10
   description = "Size of disk in GB"
 }
 
 variable "pool_path" {
   type    = string
-  default = "/var/lib/libvirt/images/windows"
+  default = "/var/lib/libvirt/images/alpine"
 }
 
-variable "windows_iso_path" {
+variable "alpine_ISO_path" {
   type = string
 }
 
-variable "virtio_iso_path" {
-  type = string
-}
-
-variable "autounattend_path" {
+variable "cloudinit_path" {
   type = string
 }
 

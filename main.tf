@@ -11,11 +11,11 @@ provider "libvirt" {
   uri = "qemu:///system"
 }
 
-module "windows_test" {
+module "windows_vm" {
   source = "./modules/windows-vm"
 
   vm_name_prefix    = "lab-windows-server"
-  vm_count          = 2
+  vm_count          = 0
   memory            = 8192
   vcpu              = 4
   windows_iso_path  = "/var/lib/libvirt/images/ISOs/WinSvr25.iso"
@@ -23,3 +23,13 @@ module "windows_test" {
   autounattend_path = "${path.root}/vms/autounattend.xml"
 }
 
+module "alpine_vms" {
+  source = "./modules/alpine-vm"
+
+  vm_name_prefix  = "lab-alpine-server"
+  vm_count        = 4
+  memory          = 512
+  vcpu            = 2
+  cloudinit_path  = "${path.root}/vms/alpine_cloudinit.yml"
+  alpine_ISO_path = "/var/lib/libvirt/images/ISOs/Alpine-Cloudinit.qcow2"
+}
