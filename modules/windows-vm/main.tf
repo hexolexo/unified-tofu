@@ -46,6 +46,12 @@ resource "libvirt_volume" "floppy" {
   source = "/tmp/autounattend-${var.vm_name_prefix}-${count.index}.img"
   format = "raw"
 
+  lifecycle {
+    replace_triggered_by = [
+      null_resource.autounattend_floppy[count.index].id
+    ]
+  }
+
   depends_on = [null_resource.autounattend_floppy]
 }
 

@@ -25,10 +25,10 @@ variable "disk_size" {
 
 variable "pool_path" {
   type    = string
-  default = "/var/lib/libvirt/images/alpine"
+  default = "/var/lib/libvirt/images/linux"
 }
 
-variable "alpine_ISO_path" {
+variable "linux_ISO_path" {
   type = string
 }
 

@@ -7,39 +7,39 @@ terraform {
   }
 }
 
-resource "libvirt_pool" "alpine" {
+resource "libvirt_pool" "vm" {
   name = "${var.vm_name_prefix}_pool"
   type = "dir"
   path = var.pool_path
 }
 
-resource "libvirt_volume" "alpine_base" {
+resource "libvirt_volume" "base" {
   name   = "${var.vm_name_prefix}_base.qcow2"
-  pool   = libvirt_pool.alpine.name
-  source = var.alpine_ISO_path
+  pool   = libvirt_pool.vm.name
+  source = var.linux_ISO_path
   format = "qcow2"
 }
 
-resource "libvirt_volume" "alpine_disk" {
+resource "libvirt_volume" "disk" {
   count          = var.vm_count
   name           = "${var.vm_name_prefix}_${count.index}.qcow2"
-  pool           = libvirt_pool.alpine.name
-  base_volume_id = libvirt_volume.alpine_base.id
+  pool           = libvirt_pool.vm.name
+  base_volume_id = libvirt_volume.base.id
   size           = var.disk_size * 1086373952 // GB to bytes
   format         = "qcow2"
 }
 
-resource "libvirt_cloudinit_disk" "alpine_init" {
+resource "libvirt_cloudinit_disk" "init" {
   count = var.vm_count
   name  = "${var.vm_name_prefix}_cloudinit_${count.index}.iso"
-  pool  = libvirt_pool.alpine.name
+  pool  = libvirt_pool.vm.name
   user_data = templatefile("${var.cloudinit_path}", {
     hostname = "${var.vm_name_prefix}-${count.index}"
     ssh_key  = file("~/.ssh/id_rsa.pub")
   })
 }
 
-resource "libvirt_domain" "alpine_vm" {
+resource "libvirt_domain" "vm" {
   count     = var.vm_count
   name      = "${var.vm_name_prefix}_${count.index}"
   memory    = var.memory
@@ -47,10 +47,10 @@ resource "libvirt_domain" "alpine_vm" {
   autostart = var.autostart
 
   disk {
-    volume_id = libvirt_volume.alpine_disk[count.index].id
+    volume_id = libvirt_volume.disk[count.index].id
   }
 
-  cloudinit = libvirt_cloudinit_disk.alpine_init[count.index].id
+  cloudinit = libvirt_cloudinit_disk.init[count.index].id
 
   network_interface {
     network_name   = "default"

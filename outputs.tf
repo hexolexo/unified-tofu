@@ -11,3 +11,11 @@ output "alpine_vms" {
     ids   = module.alpine_vms.vm_ids
   }
 }
+
+output "debian_vms" {
+  value = {
+    names = module.debian_vms.vm_names
+    ids   = module.debian_vms.vm_ids
+  }
+}
+
