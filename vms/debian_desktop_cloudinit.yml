@@ -1,0 +1,27 @@
+#cloud-config
+users:
+  - name: hexolexo
+    sudo: 'ALL=(ALL) NOPASSWD:ALL'
+    groups: sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+        - ${ssh_key}
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - qemu-guest-agent
+  - curl
+  - vim
+  - cinnamon-desktop-environment
+  - lightdm
+  - lightdm-gtk-greeter
+
+runcmd:
+  - systemctl enable lightdm
+  - systemctl start lightdm
+
+power_state:
+  mode: reboot
+  condition: test -f /var/run/reboot-required

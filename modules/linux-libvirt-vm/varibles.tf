@@ -25,7 +25,7 @@ variable "disk_size" {
 
 variable "pool_path" {
   type    = string
-  default = "/var/lib/libvirt/images/linux"
+  default = ""
 }
 
 variable "linux_ISO_path" {

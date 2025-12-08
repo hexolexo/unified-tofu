@@ -10,7 +10,7 @@ terraform {
 resource "libvirt_pool" "vm" {
   name = "${var.vm_name_prefix}_pool"
   type = "dir"
-  path = var.pool_path
+  path = var.pool_path != "" ? var.pool_path : "/var/lib/libvirt/images/pools/${var.vm_name_prefix}"
 }
 
 resource "libvirt_volume" "base" {

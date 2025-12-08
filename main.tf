@@ -11,7 +11,7 @@ provider "libvirt" {
   uri = "qemu:///system"
 }
 
-module "windows_vm" {
+module "windows_server_libvirt" {
   source = "./modules/windows-libvirt-vm"
 
   vm_name_prefix    = "lab-windows-server"
@@ -23,7 +23,7 @@ module "windows_vm" {
   autounattend_path = "${path.root}/vms/autounattend.xml"
 }
 
-module "alpine_vms" {
+module "alpine_server_libvirt" {
   source = "./modules/linux-libvirt-vm"
 
   vm_name_prefix = "lab-alpine-server"
@@ -34,14 +34,25 @@ module "alpine_vms" {
   linux_ISO_path = "/var/lib/libvirt/images/ISOs/Alpine-Cloudinit.qcow2"
 }
 
-module "debian_vms" {
+module "debian_server_libvirt" {
   source = "./modules/linux-libvirt-vm"
 
   vm_name_prefix = "lab-debian-server"
-  vm_count       = 1
+  vm_count       = 0
   memory         = 8192
   vcpu           = 4
-  cloudinit_path = "${path.root}/vms/debian_cloudinit.yml"
+  cloudinit_path = "${path.root}/vms/debian_base_cloudinit.yml"
+  linux_ISO_path = "/var/lib/libvirt/images/ISOs/debian-12-generic-amd64.qcow2"
+}
+
+module "debian_desktop_libvirt" {
+  source = "./modules/linux-libvirt-vm"
+
+  vm_name_prefix = "lab-debian-desktop"
+  vm_count       = 1
+  memory         = 8192
+  vcpu           = 8
+  cloudinit_path = "${path.root}/vms/debian_desktop_cloudinit.yml"
   linux_ISO_path = "/var/lib/libvirt/images/ISOs/debian-12-generic-amd64.qcow2"
 }
 

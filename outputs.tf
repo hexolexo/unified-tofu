@@ -1,21 +1,28 @@
-output "windows_vms" {
+output "windows_server_libvirt" {
   value = {
-    names = module.windows_vm.vm_names
-    ids   = module.windows_vm.vm_ids
+    names = module.windows_server_libvirt.vm_names
+    ids   = module.windows_server_libvirt.vm_ids
   }
 }
 
-output "alpine_vms" {
+output "alpine_server_libvirt" {
   value = {
-    names = module.alpine_vms.vm_names
-    ids   = module.alpine_vms.vm_ids
+    names = module.alpine_server_libvirt.vm_names
+    ids   = module.alpine_server_libvirt.vm_ids
   }
 }
 
-output "debian_vms" {
+output "debian_server_libvirt" {
   value = {
-    names = module.debian_vms.vm_names
-    ids   = module.debian_vms.vm_ids
+    names = module.debian_server_libvirt.vm_names
+    ids   = module.debian_server_libvirt.vm_ids
+  }
+}
+
+output "debian_desktop_libvirt" {
+  value = {
+    names = module.debian_desktop_libvirt.vm_names
+    ids   = module.debian_desktop_libvirt.vm_ids
   }
 }
 
