@@ -12,10 +12,10 @@ provider "libvirt" {
 }
 
 module "windows_vm" {
-  source = "./modules/windows-vm"
+  source = "./modules/windows-libvirt-vm"
 
   vm_name_prefix    = "lab-windows-server"
-  vm_count          = 1
+  vm_count          = 0
   memory            = 8192
   vcpu              = 8
   windows_iso_path  = "/var/lib/libvirt/images/ISOs/WinSvr25.iso"
@@ -24,7 +24,7 @@ module "windows_vm" {
 }
 
 module "alpine_vms" {
-  source = "./modules/linux-vm"
+  source = "./modules/linux-libvirt-vm"
 
   vm_name_prefix = "lab-alpine-server"
   vm_count       = 0
@@ -35,10 +35,10 @@ module "alpine_vms" {
 }
 
 module "debian_vms" {
-  source = "./modules/linux-vm"
+  source = "./modules/linux-libvirt-vm"
 
   vm_name_prefix = "lab-debian-server"
-  vm_count       = 0
+  vm_count       = 1
   memory         = 8192
   vcpu           = 4
   cloudinit_path = "${path.root}/vms/debian_cloudinit.yml"

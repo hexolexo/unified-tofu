@@ -1,6 +1,6 @@
 #cloud-config
 users:
-  - name: youruser
+  - name: hexolexo
     sudo: ALL=(NOPASSWD:ALL)
     groups: sudo
     shell: /bin/bash
@@ -15,7 +15,6 @@ packages:
   - curl
   - vim
 
-# WARN: This will reboot after first boot if kernel updates
 power_state:
   mode: reboot
   condition: test -f /var/run/reboot-required

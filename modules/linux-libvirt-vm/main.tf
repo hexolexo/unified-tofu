@@ -41,7 +41,7 @@ resource "libvirt_cloudinit_disk" "init" {
 
 resource "libvirt_domain" "vm" {
   count     = var.vm_count
-  name      = "${var.vm_name_prefix}_${count.index}"
+  name      = "${var.vm_name_prefix}-${count.index}"
   memory    = var.memory
   vcpu      = var.vcpu
   autostart = var.autostart
